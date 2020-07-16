@@ -1,8 +1,10 @@
-const express = require("express");
-const http = require("http");
-const app = express();
-const server = http.createServer(app);
+var express = require('express'),
+    http = require('http');
+var app = express();
+var server = http.createServer(app);
 var io = require('socket.io').listen(server);
+
+server.listen(3000);
 
 const users = {};
 
