@@ -9,7 +9,6 @@
     "socket.io": "^2.3.0"
   },
   "scripts": {
-    "start": "nodemon server.js",
-    "postinstall": "cd ./client && yarn"
+    "start": "nodemon server.js"
   }
 }
