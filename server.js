@@ -11,6 +11,10 @@ const users = {};
 
 const socketToRoom = {};
 
+app.get("/", (req, res) => {
+    res.send({ response: "Server is up and running." }).status(200);
+  });
+
 io.on('connection', socket => {
     socket.on("join room", roomID => {
         console.log("here",users);
