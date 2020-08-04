@@ -14,7 +14,8 @@ const socketToRoom = {};
 
 app.get("/", (req, res) => {
     res.send({
-        response: "Server is up and running."
+        response: "Server is up and running.",
+        users
     }).status(200);
 });
 
