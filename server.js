@@ -91,18 +91,23 @@ io.on('connection', socket => {
 
     socket.on('disconnect', () => {
         const roomID = socketToRoom[socket.id];
-        console.log("this guy gone", socket.id);
+        console.log("this guy gone", socketToRoom[socket.id]);
 
         let room = users[roomID];
+        console.log("left room here",users[roomID]);
         if (room) {
             room = room.filter(id => id !== socket.id);
             users[roomID] = room;
-            console.log('user left', users[roomID]);
+            if(users[roomID].length===0){
+            delete users[roomID]
+            }else {
             const returningUser = users[roomID][0]
+            console.log(socketToRoom);
             // socket.broadcast.emit('user left', socket.id);
             io.to(returningUser).emit('user left', {
                 signal: "user left"
             });
+        }
         }
     });
 
