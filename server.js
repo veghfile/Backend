@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 
 io.on('connection', socket => {
     socket.on("join room", (roomID, private) => {
-        console.log("here", users, private);
+
         if (users[roomID] && private) {
 
             const length = users[roomID].length;
@@ -34,22 +34,21 @@ io.on('connection', socket => {
 
             let name = Math.floor(Math.random() * 50) + 1;
             users[roomID].push(socket.id);
-            usersNames[roomID].push(name)
+            usersNames[roomID].push({id:socket.id,name})
 
 
         } else if (private) {
             users[roomID] = [socket.id];
             let name = Math.floor(Math.random() * 50) + 1
-            usersNames[roomID] = [name]
+            usersNames[roomID] = [{id:socket.id,name}]
         }
         socketToRoom[socket.id] = roomID;
         const usersInThisRoom = users[roomID].filter(id => id !== socket.id);
-        const usersNamesInThisRoom = usersNames[roomID].filter(id => id !== socket.id);
+        const usersNamesInThisRoom = usersNames[roomID].filter(id => id.name !== socket.id);
         socket.emit("all users", {usersInThisRoom,usersNamesInThisRoom});
     });
 
     socket.on("join room using ip", (roomID) => {
-        console.log("here", users);
         if (users[roomID]) {
 
             const length = users[roomID].length;
@@ -60,24 +59,24 @@ io.on('connection', socket => {
 
             let name = Math.floor(Math.random() * 50) + 1;
             users[roomID].push(socket.id);
-            usersNames[roomID].push(name)
+            usersNames[roomID].push({id:socket.id,name})
 
         } else {
 
             users[roomID] = [socket.id];
             let name = Math.floor(Math.random() * 50) + 1
-            usersNames[roomID] = [name]
+            usersNames[roomID] = [{id:socket.id,name}]
 
         }
         socketToRoom[socket.id] = roomID;
         const usersInThisRoom = users[roomID].filter(id => id !== socket.id);
-        const usersNamesInThisRoom = usersNames[roomID].filter(id => id !== socket.id);
+        const usersNamesInThisRoom = usersNames[roomID].filter(id => id.name !== socket.id);
         socket.emit("all users", {usersInThisRoom,usersNamesInThisRoom});
     });
 
     socket.on("sending signal", payload => {
         const roomID = socketToRoom[socket.id];
-        const usersNamesInThisRoom = usersNames[roomID].filter(id => id !== socket.id);
+        const usersNamesInThisRoom = usersNames[roomID].filter(id => id.name !== socket.id);
         socket.emit("usernames", usersNamesInThisRoom);
         io.to(payload.userToSignal).emit('user joined', {
             signal: payload.signal,
@@ -88,7 +87,7 @@ io.on('connection', socket => {
 
     socket.on("returning signal", payload => {
         const roomID = socketToRoom[socket.id]; 
-        const usersNamesInThisRoom = usersNames[roomID].filter(id => id !== socket.id);
+        const usersNamesInThisRoom = usersNames[roomID].filter(id => id.name !== socket.id);
         socket.emit("usernames", usersNamesInThisRoom);
         io.to(payload.callerID).emit('receiving returned signal', {
             signal: payload.signal,
@@ -103,14 +102,12 @@ io.on('connection', socket => {
         
         let pos
         let room = users[roomID];
-        console.log("left room here",users[roomID]);
         if (room) {
             room.forEach((id,index) =>  id == socket.id?pos=index:0);
             room = room.filter((id,index) =>  id !== socket.id);
             users[roomID] = room;
-            console.log("jthe position",pos);
+ 
             usersNames[roomID] = usersNames[roomID].filter((item,index)=> index!==pos)
-            const usersNamesInThisRoom = usersNames[roomID].filter((id,index) => index !==pos);
             if(users[roomID].length===0){
             delete users[roomID]
             delete usersNames[roomID]
