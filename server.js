@@ -1,11 +1,22 @@
 const http = require('http');
+require('dotenv').config()
 const express = require('express');
 const socketio = require('socket.io');
+var bodyParser = require('body-parser')
+const mongoose = require('mongoose')
 const cors = require('cors');
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+const route = require('./Route/index');
+const adminRouter = require('./Route/admin.router')
+const MONGO_URL =process.env.MONGO_URL || 'yourMongoUrl' 
 app.use(cors());
+app.use('/admin', adminRouter) 
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+app.use(route);
+
 
 const users = {};
 const usersNames = {};
@@ -128,5 +139,11 @@ io.on('connection', socket => {
 
 });
 
-server.listen(process.env.PORT || 8000, () => console.log('server is up and  running on port 8000'));
+const run = async() =>{
+    await mongoose.connect(MONGO_URL, {
+        useNewUrlParser: true
+      })
+server.listen(process.env.PORT || 8000, () => console.log('server is running on port 8000'));
+}
 
+run()
