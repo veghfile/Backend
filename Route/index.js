@@ -31,7 +31,6 @@ router.route("/datasum").get(function(req, res) {
         if (err) {
           res.send(err);
         } else {
-          console.log(count)
           res.json(result)
         }
       }
@@ -41,7 +40,7 @@ router.route("/datasum").get(function(req, res) {
 router.route("/countUsers").get(function(req, res) {
   users.count({}, function(err, result) {
     if (err) {
-      console.log(err);
+      res.send(err);
     } else {
       res.json(result);
     }
