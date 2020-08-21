@@ -51,11 +51,14 @@ io.on('connection', socket => {
         } else if (private) {
             users[roomID] = [socket.id];
             let name = Math.floor(Math.random() * 50) + 1
-            usersNames[roomID] = [{id:socket.id,name}]
+            usersNames[roomID] = [{id:socket.id,name}];
+            const usersNamesInThisRoom = usersNames[roomID]
+            socket.emit("usernames", usersNamesInThisRoom);
         }
         socketToRoom[socket.id] = roomID;
         const usersInThisRoom = users[roomID].filter(id => id !== socket.id);
-        const usersNamesInThisRoom = usersNames[roomID].filter(id => id.name !== socket.id);
+        const usersNamesInThisRoom = usersNames[roomID]
+        socket.emit("usernames", usersNamesInThisRoom);
         socket.emit("all users", {usersInThisRoom,usersNamesInThisRoom});
     });
 
@@ -87,12 +90,12 @@ io.on('connection', socket => {
 
     socket.on("sending signal", payload => {
         const roomID = socketToRoom[socket.id];
-        const usersNamesInThisRoom = usersNames[roomID].filter(id => id.name !== socket.id);
+        const usersNamesInThisRoom = usersNames[roomID]
         socket.emit("usernames", usersNamesInThisRoom);
         io.to(payload.userToSignal).emit('user joined', {
             signal: payload.signal,
             callerID: payload.callerID,
-            username: payload.username
+            username:payload.username
         });
     });
 
@@ -103,7 +106,7 @@ io.on('connection', socket => {
         io.to(payload.callerID).emit('receiving returned signal', {
             signal: payload.signal,
             id: socket.id,
-            username: payload.username
+            username:payload.username
         });
     });
 
