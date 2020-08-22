@@ -10,7 +10,7 @@ const server = http.createServer(app);
 const io = socketio(server);
 const route = require('./Route/index');
 const adminRouter = require('./Route/admin.router')
-const MONGO_URL =process.env.MONGO_URL || 'yourMongoUrl' 
+const MONGO_URL =process.env.MONGO_URL||"test" 
 app.use(cors());
 app.use('/admin', adminRouter) 
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -143,9 +143,9 @@ io.on('connection', socket => {
 });
 
 const run = async() =>{
-    await mongoose.connect(MONGO_URL, {
+    MONGO_URL!="test"?await mongoose.connect(MONGO_URL, {
         useNewUrlParser: true
-      })
+      }):null
 server.listen(process.env.PORT || 8000, () => console.log('server is running on port 8000'));
 }
 

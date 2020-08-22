@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const prettybytes = require('pretty-bytes');
 require('dotenv')
-mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(process.env.MONGO_URL||"mongodb://localhost:27017/myproject", {useNewUrlParser: true, useUnifiedTopology: true});
 const express = require('express');
 const router = express.Router()
 
