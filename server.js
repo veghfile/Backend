@@ -92,6 +92,7 @@ io.on('connection', socket => {
         const roomID = socketToRoom[socket.id];
         const usersNamesInThisRoom = usersNames[roomID]
         socket.emit("usernames", usersNamesInThisRoom);
+
         io.to(payload.userToSignal).emit('user joined', {
             signal: payload.signal,
             callerID: payload.callerID,
@@ -113,7 +114,6 @@ io.on('connection', socket => {
     socket.on('disconnect', () => {
         const roomID = socketToRoom[socket.id];
 
-        
         let pos
         let room = users[roomID];
         if (room) {
