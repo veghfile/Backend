@@ -35,7 +35,7 @@ The current method of sharing files involves sharing file as chunks of ArrayBuff
 The project is divided into the backend and the frontend.
 
 ### Backend
-Backend code is present on this repo [Backend](https://github.com/vegh-fileshare/Backend) the server.js file contains all the socket connection code. It is built on `express` and `socket.io` which allows usage of WebSockets and WebRTC.There are different routes for admin panel and database connections.
+Backend code is present on this repo [Backend](https://github.com/vegh-fileshare/Backend) the server.js file contains all the socket connection code. It is built on `express` and `socket.io` which allows usage of WebSockets and WebRTC. There are different routes for admin panel and database connections.
 
 ### Frontend
 The frontend code is  present on this repo [Frontend](https://github.com/vegh-fileshare/Frontend). Once the frontend is built for production (using npm run build), all the built files are stored in `build` folder which can be deployed along with the server code.
